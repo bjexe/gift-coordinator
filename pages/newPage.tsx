@@ -3,7 +3,7 @@ export default function newPage() {
         <>
         <div>
             <h1>
-                This newPage is so cool
+                This newPage is cool
             </h1>
         </div>
         </>
