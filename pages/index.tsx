@@ -1,92 +1,172 @@
 import Head from "next/head";
-import React, { ChangeEvent } from 'react';
+import React from 'react';
+import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
 
-interface LoginForm {
-    username: string,
-    password: string
+type signup = {
+  email: string,
+  password: string,
+  email_notifs: number,
+  birthday: string,
+  username: string
 };
 
-interface RegisterForm {
-    username: string,
-    email: string,
-    password: string
+type login = {
+  email: string,
+  password: string
 };
 
 export default function Home() {
 
-    const [loginFormData, setLoginFormData] = React.useState<LoginForm>({username: "", password: ""});
-    const [registerFormData, setRegisterFormData] = React.useState<RegisterForm>({username: "", email: "", password: ""});
+  const session = useSession();
+  const supabase = useSupabaseClient();
 
-    function handleLoginFormChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const { name, value } = event.target;
-        setLoginFormData(oldForm => {
-            return {
-                ...oldForm,
-                [name]: value
-            };
+  const [registerForm, setRegisterForm] = React.useState<signup>({ email: "", password: "", email_notifs: 0, birthday: "", username: "" });
+  const [loginForm, setLoginForm] = React.useState<login>({ email: "", password: "" });
+  const [loggingIn, setLoggingIn] = React.useState(true);
+  const [notifsValues, setNotifsValues] = React.useState({ upd: false, recs: false, act: false });
+
+  function handleLoginChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    const { name, value } = event.target;
+    setLoginForm(old => {
+      return {
+        ...old,
+        [name]: value
+      };
+    });
+  }
+
+  function handleRegisterChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    const { name, value, type, checked } = event.target;
+    if (type === "checkbox") {
+      setNotifsValues(old => {
+        return {
+          ...old,
+          [name]: checked
+        };
+      });
+    } else {
+      setRegisterForm(old => {
+        return {
+          ...old,
+          [name]: value
+        };
+      });
+    }
+  }
+
+  function handleLogin() {
+
+  }
+
+  function handleRegister(): void {
+    const updatedForm = new Promise<number>((resolve, reject) => {
+      let notifsNum = 0;
+      if (notifsValues.upd) {
+        notifsNum += 1;
+      }
+      if (notifsValues.act) {
+        notifsNum += 2;
+      }
+      if (notifsValues.recs) {
+        notifsNum += 4;
+      }
+      resolve(notifsNum);
+    })
+    updatedForm
+      .then(notifsNum => setRegisterForm(old => {
+        return {
+          ...old,
+          email_notifs: notifsNum
+        };
+      }))
+      .then(async () => {
+        const {data, error} = await supabase.auth.signUp({
+          email: registerForm.email,
+          password: registerForm.password,
+          options: {
+            data: {
+              email_notifs: registerForm.email_notifs,
+              birthday: registerForm.birthday,
+              username: registerForm.username,
+            }
+          }
         })
-    }
-
-    function handleRegisterFormChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const { name, value } = event.target;
-        setRegisterFormData(oldForm => {
-            return {
-                ...oldForm,
-                [name]: value
-            };
-        })
-    }
-
-    function handleLoginSubmit(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        console.log("fake login submit");
-    }
-
-    function handleRegisterSubmit(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        console.log("fake register submit")
-    }
+        if(error) {
+          console.log(`ERROR: ${JSON.stringify(error, null, 2)}`)
+        } else {
+          console.log(`DATA: ${JSON.stringify(data, null, 2)}`)
+        }
+      });
+  }
 
   return (
     <>
       <Head>
-        <title>index</title>
-        <meta name="description" content="this is the index page" />
+        <title>Gift App</title>
+        <meta name="description" content="A gift coordinating app" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div className="h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-800 via-gray-900 to-black text-white pt-10">
-          <h1 className="text-center text-5xl mb-20">Name of website</h1>
-          <form onSubmit={ e => handleLoginSubmit(e) } className="flex flex-col gap-10 items-center">
-            <h1 className="text-3xl">Login</h1>
-            <label>
-                Username:
-                <input type="text" name="username" value={ loginFormData.username } onChange={ e => handleLoginFormChange(e) } className="text-black ml-3"/>
-            </label>
-            <label>
-                Password:
-                <input type="password" name="password" value={ loginFormData.password } onChange={ e => handleLoginFormChange(e) } className="text-black ml-3"/>
-            </label>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Log in</button>
-          </form>
-          <hr className="mt-20"/>
-          <form onSubmit={ e => handleRegisterSubmit(e) } className="flex flex-col gap-10 items-center">
-            <h1 className="text-3xl mt-20">Register</h1>
-            <label>
-                Username:
-                <input type="text" name="username" value={ registerFormData.username } onChange={ e => handleRegisterFormChange(e) } className="text-black ml-3"/>
-            </label>
-            <label>
-                Password:
-                <input type="password" name="password" value={ registerFormData.password } onChange={ e => handleRegisterFormChange(e) } className="text-black ml-3"/>
-            </label>
-            <label>
-                Email:
-                <input type="email" name="email" value={ registerFormData.email } onChange={ e => handleRegisterFormChange(e) } className="text-black ml-3"/>
-            </label>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Register</button>
-          </form>
+        <div className="w-full h-screen flex justify-center items-center">
+          {!session ? (
+            <div className="h-fit w-64 flex flex-col justify-center items-center">
+              <h1 className="text-center text-bold">Please log in or sign up</h1>
+              {
+                loggingIn ?
+                  <div className="">
+                    <label>
+                      email:
+                      <input type="email" value={loginForm?.email} onChange={e => handleLoginChange(e)} name="email"></input>
+                    </label>
+                    <label>
+                      password:
+                      <input type="password" value={loginForm?.password} onChange={e => handleLoginChange(e)} name="password"></input>
+                    </label>
+                    <button>Sign in</button>
+                    <p className="text-grey hover:cursor-pointer underline" onClick={() => { setLoggingIn(old => !old) }}>Don&apos;t have an account? Register</p>
+                  </div>
+                  :
+                  <div className="">
+                    <label>
+                      email:
+                      <input type="text" value={registerForm?.email} onChange={e => handleRegisterChange(e)} name="email"></input>
+                    </label>
+                    <label>
+                      password:
+                      <input type="password" value={registerForm?.password} onChange={e => handleRegisterChange(e)} name="password"></input>
+                    </label>
+                    <label>
+                      birthday:
+                      <input type="date" value={registerForm.birthday} onChange={e => handleRegisterChange(e)} name="birthday"></input>
+                    </label>
+                    <label>
+                      username:
+                      <input type="text" value={registerForm.username} onChange={e => handleRegisterChange(e)} name="username"></input>
+                    </label>
+                    <label>
+                      Receive emails for updates and announcements?
+                      <input type="checkbox" checked={notifsValues.upd} name="upd" onChange={e => handleRegisterChange(e)}></input>
+                    </label>
+                    <label>
+                      Receive emails for recommendations?
+                      <input type="checkbox" checked={notifsValues.recs} name="recs" onChange={e => handleRegisterChange(e)}></input>
+                    </label>
+                    <label>
+                      Receive email notifications for activity? (event notifications, users, comments, etc)
+                      <input type="checkbox" checked={notifsValues.act} name="act" onChange={e => handleRegisterChange(e)}></input>
+                    </label>
+                    <button onClick={handleRegister}>Register</button>
+                    <p className="text-grey hover:cursor-pointer underline" onClick={() => { setLoggingIn(old => !old) }}>Log in instead</p>
+                  </div>
+              }
+            </div>
+          ) : (
+            <>
+              <p>Signed in!</p>
+              <button>Log out</button>
+            </>
+          )}
         </div>
       </main>
     </>
