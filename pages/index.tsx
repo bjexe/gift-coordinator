@@ -54,8 +54,21 @@ export default function Home() {
     }
   }
 
-  function handleLogin() {
+  async function handleLogin() {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: loginForm.email,
+      password: loginForm.password,
+    });
+    if(error) {
+      console.log(JSON.stringify(error, null, 2));
+    }
+  }
 
+  async function handleLogout() {
+    const { error } = await supabase.auth.signOut();
+    if(error){
+      console.log("error logging out");
+    }
   }
 
   function handleRegister(): void {
@@ -123,7 +136,7 @@ export default function Home() {
                       password:
                       <input type="password" value={loginForm?.password} onChange={e => handleLoginChange(e)} name="password"></input>
                     </label>
-                    <button>Sign in</button>
+                    <button onClick={handleLogin}>Sign in</button>
                     <p className="text-grey hover:cursor-pointer underline" onClick={() => { setLoggingIn(old => !old) }}>Don&apos;t have an account? Register</p>
                   </div>
                   :
@@ -164,7 +177,7 @@ export default function Home() {
           ) : (
             <>
               <p>Signed in!</p>
-              <button>Log out</button>
+              <button onClick={handleLogout}>Log out</button>
             </>
           )}
         </div>
