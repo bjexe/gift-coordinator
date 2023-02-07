@@ -15,6 +15,9 @@ type login = {
   password: string
 };
 
+const inputStyle = "border-2 border-slate-400 rounded";
+const buttonStyle = "rounded-full bg-lime-500 px-2 hover:bg-lime-600";
+
 export default function Home() {
 
   const session = useSession();
@@ -130,55 +133,55 @@ export default function Home() {
                   <div className="">
                     <label>
                       email:
-                      <input type="email" value={loginForm?.email} onChange={e => handleLoginChange(e)} name="email"></input>
+                      <input className={inputStyle} type="email" value={loginForm?.email} onChange={e => handleLoginChange(e)} name="email"></input>
                     </label>
                     <label>
                       password:
-                      <input type="password" value={loginForm?.password} onChange={e => handleLoginChange(e)} name="password"></input>
+                      <input className={inputStyle} type="password" value={loginForm?.password} onChange={e => handleLoginChange(e)} name="password"></input>
                     </label>
-                    <button onClick={handleLogin}>Sign in</button>
+                    <button className={buttonStyle} onClick={handleLogin}>Sign in</button>
                     <p className="text-grey hover:cursor-pointer underline" onClick={() => { setLoggingIn(old => !old) }}>Don&apos;t have an account? Register</p>
                   </div>
                   :
                   <div className="">
                     <label>
                       email:
-                      <input type="text" value={registerForm?.email} onChange={e => handleRegisterChange(e)} name="email"></input>
+                      <input className={inputStyle} type="text" value={registerForm?.email} onChange={e => handleRegisterChange(e)} name="email"></input>
                     </label>
                     <label>
                       password:
-                      <input type="password" value={registerForm?.password} onChange={e => handleRegisterChange(e)} name="password"></input>
+                      <input className={inputStyle} type="password" value={registerForm?.password} onChange={e => handleRegisterChange(e)} name="password"></input>
                     </label>
                     <label>
                       birthday:
-                      <input type="date" value={registerForm.birthday} onChange={e => handleRegisterChange(e)} name="birthday"></input>
+                      <input className={inputStyle} type="date" value={registerForm.birthday} onChange={e => handleRegisterChange(e)} name="birthday"></input>
                     </label>
                     <label>
                       username:
-                      <input type="text" value={registerForm.username} onChange={e => handleRegisterChange(e)} name="username"></input>
+                      <input className={inputStyle} type="text" value={registerForm.username} onChange={e => handleRegisterChange(e)} name="username"></input>
                     </label>
                     <label>
                       Receive emails for updates and announcements?
-                      <input type="checkbox" checked={notifsValues.upd} name="upd" onChange={e => handleRegisterChange(e)}></input>
+                      <input className={inputStyle} type="checkbox" checked={notifsValues.upd} name="upd" onChange={e => handleRegisterChange(e)}></input>
                     </label>
                     <label>
                       Receive emails for recommendations?
-                      <input type="checkbox" checked={notifsValues.recs} name="recs" onChange={e => handleRegisterChange(e)}></input>
+                      <input className={inputStyle} type="checkbox" checked={notifsValues.recs} name="recs" onChange={e => handleRegisterChange(e)}></input>
                     </label>
                     <label>
                       Receive email notifications for activity? (event notifications, users, comments, etc)
-                      <input type="checkbox" checked={notifsValues.act} name="act" onChange={e => handleRegisterChange(e)}></input>
+                      <input className={inputStyle} type="checkbox" checked={notifsValues.act} name="act" onChange={e => handleRegisterChange(e)}></input>
                     </label>
-                    <button onClick={handleRegister}>Register</button>
-                    <p className="text-grey hover:cursor-pointer underline" onClick={() => { setLoggingIn(old => !old) }}>Log in instead</p>
+                    <button className={buttonStyle} onClick={handleRegister}>Register</button>
+                    <p className="text-grey hover:cursor-pointer underline" onClick={() => { setLoggingIn(old => !old) }}>Have an account? Log in</p>
                   </div>
               }
             </div>
           ) : (
-            <>
+            <div className="flex flex-col justify-center gap-6">
               <p>Signed in!</p>
-              <button onClick={handleLogout}>Log out</button>
-            </>
+              <button className={buttonStyle} onClick={handleLogout}>Log out</button>
+            </div>
           )}
         </div>
       </main>
