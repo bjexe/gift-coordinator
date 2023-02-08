@@ -15,7 +15,7 @@ type login = {
   password: string
 };
 
-const inputStyle = "border-2 border-slate-400 rounded";
+const inputStyle = "border-2 border-slate-400 rounded mb-2";
 const buttonStyle = "rounded-full bg-lime-500 px-2 hover:bg-lime-600";
 
 export default function Home() {
@@ -143,7 +143,7 @@ export default function Home() {
                     <p className="text-grey hover:cursor-pointer underline" onClick={() => { setLoggingIn(old => !old) }}>Don&apos;t have an account? Register</p>
                   </div>
                   :
-                  <div className="">
+                  <div className="flex flex-col justify-center items-left">
                     <label>
                       email:
                       <input className={inputStyle} type="text" value={registerForm?.email} onChange={e => handleRegisterChange(e)} name="email"></input>
