@@ -2,8 +2,8 @@ import UserDash from '@/components/UserDash'
 import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-
-const buttonStyle = "rounded-full bg-lime-500 px-2 hover:bg-lime-600";
+import { buttonStyle } from "@/styles/buttonsClasses";
+import { formFieldStyle, inputStyle} from "@/styles/formClasses";
 
 export default function Home() {
     const user = useUser();

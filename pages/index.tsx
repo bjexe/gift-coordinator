@@ -2,7 +2,8 @@ import Head from "next/head";
 import React from 'react';
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/router';
-import UserDash from "@/components/UserDash";
+import { buttonStyle } from "@/styles/buttonsClasses";
+import { formFieldStyle, inputStyle} from "@/styles/formClasses";
 
 type signup = {
   email: string;
@@ -16,10 +17,6 @@ type login = {
   email: string;
   password: string;
 };
-
-const inputStyle = "border-2 border-slate-400 rounded mb-2";
-const formFieldStyle = "flex flex-col items-end";
-const buttonStyle = "rounded-full bg-lime-500 px-2 hover:bg-lime-600";
 
 export default function Index() {
 
