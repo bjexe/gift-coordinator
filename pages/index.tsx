@@ -1,6 +1,8 @@
 import Head from "next/head";
-import React from "react";
-import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+import React from 'react';
+import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useRouter } from 'next/router';
+import UserDash from "@/components/UserDash";
 
 type signup = {
   email: string;
@@ -19,9 +21,11 @@ const inputStyle = "border-2 border-slate-400 rounded mb-2";
 const formFieldStyle = "flex flex-col items-end";
 const buttonStyle = "rounded-full bg-lime-500 px-2 hover:bg-lime-600";
 
-export default function Home() {
+export default function Index() {
+
   const session = useSession();
   const supabase = useSupabaseClient();
+  const router = useRouter();
 
   const [registerForm, setRegisterForm] = React.useState<signup>({
     email: "",
@@ -40,6 +44,12 @@ export default function Home() {
     recs: false,
     act: false,
   });
+
+  React.useEffect(() => {
+    if(session) {
+      router.push('/home');
+    }
+  }, [session]);
 
   function handleLoginChange(event: React.ChangeEvent<HTMLInputElement>): void {
     const { name, value } = event.target;
@@ -79,6 +89,12 @@ export default function Home() {
     });
     if (error) {
       console.log(JSON.stringify(error, null, 2));
+    } else if(data) {
+      router.push({
+        pathname: '/home'
+      })
+    } else {
+      throw new Error('supabase auth failed with no error');
     }
   }
 
