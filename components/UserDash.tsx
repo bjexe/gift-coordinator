@@ -38,7 +38,7 @@ export default function UserDash({ user } : {user: User}) {
     return (
         <div>
             <p>
-                {username}
+                {loading ? `${username}` : "Loading..."}
             </p>
         </div>
     );
