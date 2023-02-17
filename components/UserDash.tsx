@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSupabaseClient, User } from '@supabase/auth-helpers-react';
 import { Database } from '@/utils/database.types';
 import Avatar from '@/components/Avatar';
+import { url } from 'inspector';
 type Profiles = Database['public']['Tables']['profiles']['Row'];
 
 export default function UserDash({ user } : {user: User}) {
@@ -10,6 +11,7 @@ export default function UserDash({ user } : {user: User}) {
     const [username, setUsername] = useState<Profiles['username']>(null);
     const [avatar_url, setAvatarUrl] = useState<Profiles['avatar_url']>(null);
     const [showOptions, setShowOptions] = useState(false);
+    const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
         getUserDetails();
@@ -57,26 +59,58 @@ export default function UserDash({ user } : {user: User}) {
         }
     }
 
+    const uploadAvatar: React.ChangeEventHandler<HTMLInputElement> = async (event) => {
+        try {
+            setUploading(true);
+            if(!event.target.files || event.target.files.length === 0) {
+                throw new Error('You must select an image to upload');
+            }
+            const file = event.target.files[0];
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${user.id}.${fileExt}`;
+            const filePath = `${fileName}`
+
+            let {error: uploadError} = await supabase.storage.from('avatars').upload(filePath, file, {upsert: true});
+            if(uploadError) {
+                throw uploadError;
+            }
+            setAvatarUrl(filePath);
+            updateProfile({username, avatar_url: filePath});
+        } catch (exception) {
+            alert('Error uploading avatar');
+            console.log(JSON.stringify(exception, null, 2));
+        } finally {
+            setUploading(false);
+        }
+    }
+
     return (
         <div className="">
             <div className='flex flex-col justify-center items-center'>
                 <p>
                     {!loading ? `signed in as ${username}` : "Loading..."}
                 </p>
-                <Avatar onClick={() => setShowOptions(old => !old)} uid={user.id} url={avatar_url} size={150} onUpload={(url) => {
-                    setAvatarUrl(url);
-                    updateProfile({username, avatar_url: url})}
-                }/>
-                {showOptions && (
+                <Avatar onClick={() => setShowOptions(old => !old)} url={avatar_url} size={150}/>
+                {showOptions && ( 
                     <div className="w-[200px] rounded-lg">
-                        <div className='odd:bg-slate-200 even:bg-slate-100'>
-                            <p>Manage your account</p>
+                        <div className='odd:bg-slate-200 even:bg-slate-100 pl-[10px]'>
+                            <label className="hover:cursor-pointer hover:text-slate-500" htmlFor="single">Change profile picture</label>
+                            <input className={`hidden`} type="file" id="single" accept="image/*" onChange={uploadAvatar} disabled={uploading}/>
                         </div>
-                        <div className='odd:bg-slate-200 even:bg-slate-100'>
-                            <p>Your Events</p>
+                        <div className='odd:bg-slate-200 even:bg-slate-100 pl-[10px]'>
+                            <p className="hover:cursor-pointer hover:text-slate-500" onClick={() => {
+                                
+                            }}>Your Events</p>
                         </div>
-                        <div className='odd:bg-slate-200 even:bg-slate-100'>
-                            <p>Friends</p>
+                        <div className='odd:bg-slate-200 even:bg-slate-100 pl-[10px]' >
+                            <p className="hover:cursor-pointer hover:text-slate-500" onClick={() => {
+                                
+                            }}>Friends</p>
+                        </div>
+                        <div className='odd:bg-slate-200 even:bg-slate-100 pl-[10px]' >
+                            <p className="hover:cursor-pointer hover:text-slate-500" onClick={() => {
+                                
+                            }}>Settings</p>
                         </div>
                     </div>
                 )}
