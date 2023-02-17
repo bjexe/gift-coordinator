@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { buttonStyle } from "@/styles/buttonsClasses";
 import { formFieldStyle, inputStyle} from "@/styles/formClasses";
-import Avatar from '@/components/Avatar';
 
 export default function Home() {
     const user = useUser();
@@ -27,9 +26,14 @@ export default function Home() {
     }
 
     return(
-        <div>
+        <div className="flex justify-center flex-col">
             {user && <UserDash user={user}/>}
-            <button onClick={handleLogout} className={buttonStyle}>Sign out</button>
+            <div>
+                <button onClick={handleLogout} className={`${buttonStyle}`}>Sign out</button>
+            </div>
+            <div>
+                <h1 className="font-inter">Whereas recognition of the inherent dignity</h1>
+            </div>
         </div>
     );
 }

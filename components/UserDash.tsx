@@ -59,9 +59,9 @@ export default function UserDash({ user } : {user: User}) {
     return (
         <div>
             <p>
-                {!loading ? `${username}` : "Loading..."}
+                {!loading ? `signed in as ${username}` : "Loading..."}
             </p>
-            <Avatar uid={user.id} url={avatar_url} size={150} onUpload={(url) => {
+            <Avatar uid={user.id} url={avatar_url} size={100} onUpload={(url) => {
                 setAvatarUrl(url);
                 updateProfile({username, avatar_url: url})}
             }/>
