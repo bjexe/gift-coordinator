@@ -30,9 +30,9 @@ export default function Avatar({url, size, onClick} : {url: Profiles['avatar_url
     return (
         <div className={``}>
             {avatarUrl ? (
-                <Image className="hover:cursor-pointer" onClick={onClick} src={avatarUrl} alt='User Avatar' width={size} height={size}/>
+                <Image className="hover:cursor-pointer rounded-full" onClick={onClick} src={avatarUrl} alt='User Avatar' width={size} height={size}/>
             ) : (
-                <Image onClick={onClick} src={DefaultAvatar} alt="Default Avatar" width={size} height={size}/>
+                <Image className="rounded-full" onClick={onClick} src={DefaultAvatar} alt="Default Avatar" width={size} height={size}/>
             )}
         </div>
     )

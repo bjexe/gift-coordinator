@@ -1,9 +1,7 @@
 import UserDash from '@/components/UserDash';
 import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { buttonStyle } from "@/styles/buttonsClasses";
-import { formFieldStyle, inputStyle} from "@/styles/formClasses";
+import { useEffect } from 'react';
 
 export default function Home() {
     const user = useUser();
@@ -17,10 +15,14 @@ export default function Home() {
     }, [user]);
 
     return(
-        <div className="flex justify-center flex-col">
-            {user && <UserDash user={user}/>}
-            <div>
-                <h1 className="font-inter">Whereas recognition of the inherent dignity</h1>
+        <div>
+            <div className="flex w-full justify-between items-center bg-slate-300">
+                <div className='justify-self-start'>
+                    <h1 className='font-inter ml-[25px]'>Website Name</h1>
+                </div>
+                <div className='justify-self-end self-end'>
+                    {user && <UserDash user={user}/>}
+                </div>
             </div>
         </div>
     );

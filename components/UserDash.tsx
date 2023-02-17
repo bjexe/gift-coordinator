@@ -97,33 +97,37 @@ export default function UserDash({ user } : {user: User}) {
     return (
         <div className="">
             <div className='flex flex-col justify-center items-center'>
-                <p>
-                    {!loading ? `signed in as ${username}` : "Loading..."}
-                </p>
-                <Avatar onClick={() => setShowOptions(old => !old)} url={avatar_url} size={150}/>
-                {showOptions && ( 
-                    <div className="w-[200px] rounded-lg">
-                        <div className='odd:bg-slate-200 even:bg-slate-100 pl-[10px]'>
-                            <label className="hover:cursor-pointer hover:text-slate-500" htmlFor="single">Change profile picture</label>
-                            <input className={`hidden`} type="file" id="single" accept="image/*" onChange={uploadAvatar} disabled={uploading}/>
-                        </div>
-                        <div className='odd:bg-slate-200 even:bg-slate-100 pl-[10px]'>
-                            <p className="hover:cursor-pointer hover:text-slate-500" onClick={() => {
-                                
-                            }}>Your Events</p>
-                        </div>
-                        <div className='odd:bg-slate-200 even:bg-slate-100 pl-[10px]' >
-                            <p className="hover:cursor-pointer hover:text-slate-500" onClick={() => {
-                                
-                            }}>Friends</p>
-                        </div>
-                        <div className='odd:bg-slate-200 even:bg-slate-100 pl-[10px]' >
-                            <p className="hover:cursor-pointer hover:text-slate-500" onClick={() => {
-                                
-                            }}>Settings</p>
-                        </div>
-                        <div className='odd:bg-slate-200 even:bg-slate-100 pl-[10px]' >
-                            <p className="hover:cursor-pointer hover:text-slate-500" onClick={handleLogout}>Log out</p>
+                <div className='relative'>
+                    <Avatar onClick={() => setShowOptions(old => !old)} url={avatar_url} size={50}/>
+                </div>
+                {showOptions && (
+                    <div className='relative inline-block'>
+                        <p className=''>
+                            {!loading ? `signed in as ${username}` : "Loading..."}
+                        </p>
+                        <div className="w-[125px] absolute">
+                            <div className='odd:bg-slate-200 even:bg-slate-100 pl-[10px] text-[10px]'>
+                                <label className="hover:cursor-pointer hover:text-slate-500" htmlFor="single">Change profile picture</label>
+                                <input className={`hidden`} type="file" id="single" accept="image/*" onChange={uploadAvatar} disabled={uploading}/>
+                            </div>
+                            <div className='odd:bg-slate-200 even:bg-slate-100 pl-[10px] text-[10px]'>
+                                <p className="hover:cursor-pointer hover:text-slate-500" onClick={() => {
+                                    
+                                }}>Your Events</p>
+                            </div>
+                            <div className='odd:bg-slate-200 even:bg-slate-100 pl-[10px] text-[10px]' >
+                                <p className="hover:cursor-pointer hover:text-slate-500" onClick={() => {
+                                    
+                                }}>Friends</p>
+                            </div>
+                            <div className='odd:bg-slate-200 even:bg-slate-100 pl-[10px] text-[10px]' >
+                                <p className="hover:cursor-pointer hover:text-slate-500" onClick={() => {
+                                    
+                                }}>Settings</p>
+                            </div>
+                            <div className='odd:bg-slate-200 even:bg-slate-100 pl-[10px] text-[10px]' >
+                                <p className="hover:cursor-pointer hover:text-slate-500" onClick={handleLogout}>Log out</p>
+                            </div>
                         </div>
                     </div>
                 )}
