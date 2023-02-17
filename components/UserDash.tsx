@@ -8,7 +8,8 @@ export default function UserDash({ user } : {user: User}) {
     const supabase = useSupabaseClient<Database>();
     const [loading, setLoading] = useState(true);
     const [username, setUsername] = useState<Profiles['username']>(null);
-    const [avatar_url, setAvatarUrl] = useState<Profiles['avatar_url']>(null)
+    const [avatar_url, setAvatarUrl] = useState<Profiles['avatar_url']>(null);
+    const [showOptions, setShowOptions] = useState(false);
 
     useEffect(() => {
         getUserDetails();
@@ -57,14 +58,29 @@ export default function UserDash({ user } : {user: User}) {
     }
 
     return (
-        <div>
-            <p>
-                {!loading ? `signed in as ${username}` : "Loading..."}
-            </p>
-            <Avatar uid={user.id} url={avatar_url} size={100} onUpload={(url) => {
-                setAvatarUrl(url);
-                updateProfile({username, avatar_url: url})}
-            }/>
+        <div className="">
+            <div className='flex flex-col justify-center items-center'>
+                <p>
+                    {!loading ? `signed in as ${username}` : "Loading..."}
+                </p>
+                <Avatar onClick={() => setShowOptions(old => !old)} uid={user.id} url={avatar_url} size={150} onUpload={(url) => {
+                    setAvatarUrl(url);
+                    updateProfile({username, avatar_url: url})}
+                }/>
+                {showOptions && (
+                    <div className="w-[200px] rounded-lg">
+                        <div className='odd:bg-slate-200 even:bg-slate-100'>
+                            <p>Manage your account</p>
+                        </div>
+                        <div className='odd:bg-slate-200 even:bg-slate-100'>
+                            <p>Your Events</p>
+                        </div>
+                        <div className='odd:bg-slate-200 even:bg-slate-100'>
+                            <p>Friends</p>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

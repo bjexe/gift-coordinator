@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { buttonStyle } from "@/styles/buttonsClasses";
 type Profiles = Database['public']['Tables']['profiles']['Row'];
 
-export default function Avatar({uid, url, size, onUpload} : {uid: string, url: Profiles['avatar_url'], size: number, onUpload: (url: string) => void}) {
+export default function Avatar({uid, url, size, onUpload, onClick} : {uid: string, url: Profiles['avatar_url'], size: number, onUpload: (url: string) => void, onClick: () => void}) {
     
     const supabase = useSupabaseClient<Database>();
     const [avatarUrl, setAvatarUrl] = useState<Profiles['avatar_url']>(null);
@@ -57,9 +57,9 @@ export default function Avatar({uid, url, size, onUpload} : {uid: string, url: P
     return (
         <div className={``}>
             {avatarUrl ? (
-                <Image src={avatarUrl} alt='User Avatar' width={size} height={size}/>
+                <Image className="hover:cursor-pointer" onClick={onClick} src={avatarUrl} alt='User Avatar' width={size} height={size}/>
             ) : (
-                <Image src={DefaultAvatar} alt="Default Avatar" width={size} height={size}/>
+                <Image onClick={onClick} src={DefaultAvatar} alt="Default Avatar" width={size} height={size}/>
             )}
             <div className={`w-[${size}px]`}>
                 <label className={`w-[${size}px] ${buttonStyle}`} htmlFor="single">
