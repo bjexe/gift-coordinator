@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSupabaseClient, User } from '@supabase/auth-helpers-react';
 import { Database } from '@/utils/database.types';
 import Avatar from '@/components/Avatar';
-import { url } from 'inspector';
+import { useRouter } from 'next/router';
 type Profiles = Database['public']['Tables']['profiles']['Row'];
 
 export default function UserDash({ user } : {user: User}) {
@@ -12,6 +12,7 @@ export default function UserDash({ user } : {user: User}) {
     const [avatar_url, setAvatarUrl] = useState<Profiles['avatar_url']>(null);
     const [showOptions, setShowOptions] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
         getUserDetails();
@@ -84,6 +85,15 @@ export default function UserDash({ user } : {user: User}) {
         }
     }
 
+    async function handleLogout() {
+        const { error } = await supabase.auth.signOut();
+        if(error){
+          console.log("error logging out");
+        } else {
+            router.push('/');
+        }
+    }
+
     return (
         <div className="">
             <div className='flex flex-col justify-center items-center'>
@@ -111,6 +121,9 @@ export default function UserDash({ user } : {user: User}) {
                             <p className="hover:cursor-pointer hover:text-slate-500" onClick={() => {
                                 
                             }}>Settings</p>
+                        </div>
+                        <div className='odd:bg-slate-200 even:bg-slate-100 pl-[10px]' >
+                            <p className="hover:cursor-pointer hover:text-slate-500" onClick={handleLogout}>Log out</p>
                         </div>
                     </div>
                 )}

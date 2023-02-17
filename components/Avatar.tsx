@@ -1,4 +1,3 @@
-// https://supabase.com/docs/guides/getting-started/tutorials/with-nextjs#create-an-upload-widget
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from 'react';
 import { Database } from "@/utils/database.types";

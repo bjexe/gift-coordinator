@@ -16,21 +16,9 @@ export default function Home() {
         }
     }, [user]);
 
-    async function handleLogout() {
-        const { error } = await supabase.auth.signOut();
-        if(error){
-          console.log("error logging out");
-        } else {
-            router.push('/');
-        }
-    }
-
     return(
         <div className="flex justify-center flex-col">
             {user && <UserDash user={user}/>}
-            <div>
-                <button onClick={handleLogout} className={`${buttonStyle}`}>Sign out</button>
-            </div>
             <div>
                 <h1 className="font-inter">Whereas recognition of the inherent dignity</h1>
             </div>
