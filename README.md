@@ -1,1 +1,1 @@
-# A project currently in the planning stage using Next.js
+# A gift coordinating project currently in the planning stage using Next.js
